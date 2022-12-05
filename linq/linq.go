@@ -1,3 +1,0 @@
-package linq
-
-func Where() []
