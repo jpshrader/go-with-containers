@@ -4,28 +4,33 @@ import (
 	"fmt"
 )
 
-func main() {
-	items := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-
-	evenNumbers := Where(isEven, items)
-
-	fmt.Printf("even numbers: %v", evenNumbers)
-}
-
 func isEven(x int) bool {
 	return x % 2 == 0
 }
 
+func isOdd(x int) bool {
+	return !isEven(x)
+}
+
+func main() {
+	numbers := Slice[int]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+	evenNumbers := numbers.Where(isEven)
+	oddNumbers := numbers.Where(isOdd)
+
+	fmt.Println(fmt.Sprintf("even numbers: %v", evenNumbers))
+	fmt.Println(fmt.Sprintf("odd numbers:  %v", oddNumbers))
+}
+
+type Slice[T any] []T
+
 type WhereFilter[T any] func(x T) bool
 
-func Where[T any](filter WhereFilter[T], source []T,) ([]T) {
-	returnValues := make([]T, 0)
-
-	for _, item := range source {
+func (slice Slice[T]) Where(filter WhereFilter[T]) (ret []T) {
+	for _, item := range slice {
 		if filter(item) {
-			returnValues = append(returnValues, item)
+			ret = append(ret, item)
 		}
 	}
-
-	return returnValues
+	return
 }
